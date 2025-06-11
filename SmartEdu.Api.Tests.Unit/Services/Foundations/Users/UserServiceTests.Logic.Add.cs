@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using SmartEdu.Api.Models.Foundations.Users;
 
@@ -13,7 +14,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             User randomUser = CreateRandomUser();
             User inputUser = randomUser;
             User storageUser = inputUser;
-            User expectedUser = storageUser;
+            User expectedUser = storageUser.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertUserAsync(inputUser))
