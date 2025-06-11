@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SmartEdu.Api.Brokers.Storages
 {
-    public partial class StorageBroker : EFxceptionsContext
+    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
 
