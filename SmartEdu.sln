@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartEdu.Api", "SmartEdu.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartEdu.Api.Tests.Unit", "SmartEdu.Api.Tests.Unit\SmartEdu.Api.Tests.Unit.csproj", "{EDEF1D3E-E9AB-4F5C-830D-9C3BC9AB7656}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartEdu.Api.Infrastracture.Build", "SmartEdu.Api.Infrastracture.Build\SmartEdu.Api.Infrastracture.Build.csproj", "{2C162795-9153-4827-92E8-3FA8A7B60B3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{EDEF1D3E-E9AB-4F5C-830D-9C3BC9AB7656}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDEF1D3E-E9AB-4F5C-830D-9C3BC9AB7656}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDEF1D3E-E9AB-4F5C-830D-9C3BC9AB7656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C162795-9153-4827-92E8-3FA8A7B60B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C162795-9153-4827-92E8-3FA8A7B60B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C162795-9153-4827-92E8-3FA8A7B60B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C162795-9153-4827-92E8-3FA8A7B60B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
