@@ -1,0 +1,10 @@
+﻿using Microsoft.EntityFrameworkCore;
+using SmartEdu.Api.Models.Foundations.Users;
+
+namespace SmartEdu.Api.Brokers.Storages
+{
+    public partial class StorageBroker
+    {
+        public DbSet<User> Users { get; set; }
+    }
+}
