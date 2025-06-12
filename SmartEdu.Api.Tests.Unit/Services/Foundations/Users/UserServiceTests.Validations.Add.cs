@@ -99,5 +99,42 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfRoleIsInvalidAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateRandomUser();
+            User invalidUser = randomUser;
+            invalidUser.Role = GetInvalidEnum<Role>();
+            var invalidUserException = new InvalidUserException();
+
+            invalidUserException.AddData(
+                key: nameof(User.Role),
+                values: "Role is required");
+
+            var expectedUserValidationException =
+                new UserValidationException(invalidUserException);
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(invalidUser);
+
+            //then
+            await Assert.ThrowsAsync<UserValidationException>(() =>
+                addUserTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))),
+                        Times.Once());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>()),
+                    Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
