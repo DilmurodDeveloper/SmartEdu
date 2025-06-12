@@ -31,7 +31,8 @@ namespace SmartEdu.Api.Controllers
                 return BadRequest(userValidationException.InnerException);
             }
             catch (UserDependencyValidationException userDependencyValidationException)
-                when (userDependencyValidationException.InnerException is AlreadyExistsUserException)
+                when (userDependencyValidationException.InnerException
+                    is AlreadyExistsUserException)
             {
                 return Conflict(userDependencyValidationException.InnerException);
             }
@@ -46,6 +47,28 @@ namespace SmartEdu.Api.Controllers
             catch (UserServiceException userServiceException)
             {
                 return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<User>> GetAllUsers()
+        {
+            try
+            {
+                IQueryable<User> allUsers =
+                    this.userService.RetrieveAllUsers();
+
+                return Created(allUsers);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(
+                    userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(
+                    userServiceException.InnerException);
             }
         }
     }
