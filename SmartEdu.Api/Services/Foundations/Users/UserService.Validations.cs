@@ -16,7 +16,10 @@ namespace SmartEdu.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(user.Address), Parameter: nameof(User.Address)),
                 (Rule: IsInvalid(user.PasswordHash), Parameter: nameof(User.PasswordHash)),
-                (Rule: IsInvalid(user.Role), Parameter: nameof(User.Role)));
+                (Rule: IsInvalid(user.Role), Parameter: nameof(User.Role)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+                (Rule: IsInvalid(user.IsActive), Parameter: nameof(User.IsActive)));
         }
 
         private void ValidateUserNotNull(User user)
@@ -43,6 +46,18 @@ namespace SmartEdu.Api.Services.Foundations.Users
         {
             Condition = Enum.IsDefined(role) is false,
             Message = "Role is required"
+        };
+
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Date is required"
+        };
+
+        private static dynamic IsInvalid(bool isActive) => new
+        {
+            Condition = isActive is false,
+            Message = "IsActive must be true"
         };
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
