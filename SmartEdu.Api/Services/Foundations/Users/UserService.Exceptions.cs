@@ -61,6 +61,13 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedUserServiceException =
+                    new FailedUserServiceException(exception);
+
+                throw CreateAndLogServiceException(failedUserServiceException);
+            }
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
