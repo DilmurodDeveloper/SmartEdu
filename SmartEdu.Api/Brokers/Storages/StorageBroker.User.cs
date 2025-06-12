@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SmartEdu.Api.Models.Foundations.Users;
 
 namespace SmartEdu.Api.Brokers.Storages
@@ -8,16 +7,10 @@ namespace SmartEdu.Api.Brokers.Storages
     {
         public DbSet<User> Users { get; set; }
 
-        public async ValueTask<User> InsertUserAsync(User user)
-        {
-            using var broker = new StorageBroker(this.configuration);
+        public async ValueTask<User> InsertUserAsync(User user) =>
+            await InsertAsync(user);
 
-            EntityEntry<User> userEntityEntry =
-                await broker.Users.AddAsync(user);
-
-            await broker.SaveChangesAsync();
-
-            return userEntityEntry.Entity;
-        }
+        public IQueryable<User> SelectAllUsers() =>
+            SelectAll<User>();
     }
 }
