@@ -82,5 +82,43 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            User someUser = CreateRandomUser();
+            var serviceException = new Exception();
+
+            var failedUserServiceException =
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException =
+                new UserServiceException(failedUserServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertUserAsync(someUser))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser);
+
+            // then
+            await Assert.ThrowsAsync<UserServiceException>(() =>
+                addUserTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(someUser),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
