@@ -1,5 +1,6 @@
 using SmartEdu.Api.Brokers.Loggings;
 using SmartEdu.Api.Brokers.Storages;
+using SmartEdu.Api.Services.Foundations.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<StorageBroker>();
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddSwaggerGen();
 
