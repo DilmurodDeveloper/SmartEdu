@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
 using SmartEdu.Api.Models.Foundations.Users;
 using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
@@ -30,6 +31,13 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
                 throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
+            }
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
@@ -48,6 +56,17 @@ namespace SmartEdu.Api.Services.Foundations.Users
             this.loggingBroker.LogCritical(userDependencyException);
 
             return userDependencyException;
+        }
+
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
     }
 }

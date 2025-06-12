@@ -52,7 +52,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             string someMessage = GetRandomString();
             var dublicateKeyException = new DuplicateKeyException(someMessage);
 
-            var alreadyExistsUserException = 
+            var alreadyExistsUserException =
                 new AlreadyExistsUserException(dublicateKeyException);
 
             var expectedUserDependencyValidationException =
