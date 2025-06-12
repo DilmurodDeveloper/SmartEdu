@@ -9,6 +9,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
     public partial class UserService
     {
         private delegate ValueTask<User> ReturningUserFunction();
+        private delegate IQueryable<User> ReturningUsersFunction();
 
         private async ValueTask<User> TryCatch(ReturningUserFunction returningUserFunction)
         {
@@ -44,6 +45,21 @@ namespace SmartEdu.Api.Services.Foundations.Users
                     new FailedUserServiceException(exception);
 
                 throw CreateAndLogServiceException(failedUserServiceException);
+            }
+        }
+
+        private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
+        {
+            try
+            {
+                return returningUsersFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
         }
 

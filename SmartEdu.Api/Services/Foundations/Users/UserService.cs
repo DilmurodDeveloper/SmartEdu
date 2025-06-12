@@ -26,6 +26,6 @@ namespace SmartEdu.Api.Services.Foundations.Users
         });
 
         public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
+            TryCatch(() => this.storageBroker.SelectAllUsers());
     }
 }

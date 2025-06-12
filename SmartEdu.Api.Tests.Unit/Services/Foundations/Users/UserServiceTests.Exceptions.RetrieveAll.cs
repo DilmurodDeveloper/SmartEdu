@@ -25,11 +25,11 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             Action retrieveAllUsersAction = () =>
                 this.userService.RetrieveAllUsers();
 
-            UserDependencyException userDependencyException =
+            UserDependencyException actualUserDependencyException =
                 Assert.Throws<UserDependencyException>(retrieveAllUsersAction);
 
             //then
-            userDependencyException.Should().BeEquivalentTo(
+            actualUserDependencyException.Should().BeEquivalentTo(
                 expectedUserDependencyException);
 
             this.storageBrokerMock.Verify(broker =>
