@@ -1,6 +1,7 @@
 ﻿using SmartEdu.Api.Brokers.Loggings;
 using SmartEdu.Api.Brokers.Storages;
 using SmartEdu.Api.Models.Foundations.Users;
+using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 
 namespace SmartEdu.Api.Services.Foundations.Users
 {
@@ -17,7 +18,26 @@ namespace SmartEdu.Api.Services.Foundations.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask<User> AddUserAsync(User user) =>
-            await this.storageBroker.InsertUserAsync(user);
+        public async ValueTask<User> AddUserAsync(User user)
+        {
+            try
+            {
+                if (user is null)
+                {
+                    throw new NullUserException();
+                }
+
+                return await this.storageBroker.InsertUserAsync(user);
+            }
+            catch (NullUserException nullUserException)
+            {
+                var userValidationException =
+                    new UserValidationException(nullUserException);
+
+                this.loggingBroker.LogError(userValidationException);
+
+                throw userValidationException;
+            }
+        }
     }
 }
