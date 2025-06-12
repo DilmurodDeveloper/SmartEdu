@@ -1,4 +1,5 @@
-﻿using SmartEdu.Api.Models.Foundations.Users;
+﻿using Microsoft.Data.SqlClient;
+using SmartEdu.Api.Models.Foundations.Users;
 using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
 
@@ -22,6 +23,13 @@ namespace SmartEdu.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
@@ -32,6 +40,14 @@ namespace SmartEdu.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var userDependencyException = new UserDependencyException(exception);
+            this.loggingBroker.LogCritical(userDependencyException);
+
+            return userDependencyException;
         }
     }
 }

@@ -64,7 +64,8 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             var filler = new Filler<User>();
 
             filler.Setup()
-                .OnType<DateTimeOffset>().Use(date);
+                .OnType<DateTimeOffset>().Use(date)
+                .OnProperty(u => u.IsActive).Use(true);
 
             return filler;
         }
