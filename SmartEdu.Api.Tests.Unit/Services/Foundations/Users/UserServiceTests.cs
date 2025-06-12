@@ -42,6 +42,12 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         private static SqlException GetSqlError() =>
             (SqlException)RuntimeHelpers.GetUninitializedObject(typeof(SqlException));
 
+        private IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(date: GetRandomDateTimeOffset())
+                .Create(GetRandomNumber()).AsQueryable();
+        }
+
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = GetRandomNumber();
