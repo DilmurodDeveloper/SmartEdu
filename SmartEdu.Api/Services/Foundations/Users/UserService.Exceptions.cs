@@ -43,13 +43,13 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
             }
-            catch (Exception exception)
-            {
-                var failedUserServiceException =
-                    new FailedUserServiceException(exception);
+            //catch (Exception exception)
+            //{
+            //    var failedUserServiceException =
+            //        new FailedUserServiceException(exception);
 
-                throw CreateAndLogServiceException(failedUserServiceException);
-            }
+            //    throw CreateAndLogServiceException(failedUserServiceException);
+            //}
         }
 
         private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
