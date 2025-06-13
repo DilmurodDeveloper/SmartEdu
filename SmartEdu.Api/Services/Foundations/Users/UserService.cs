@@ -1,4 +1,5 @@
-﻿using SmartEdu.Api.Brokers.Loggings;
+﻿using Microsoft.Data.SqlClient;
+using SmartEdu.Api.Brokers.Loggings;
 using SmartEdu.Api.Brokers.Storages;
 using SmartEdu.Api.Models.Foundations.Users;
 using SmartEdu.Api.Models.Foundations.Users.Exceptions;
@@ -81,6 +82,18 @@ namespace SmartEdu.Api.Services.Foundations.Users
                 this.loggingBroker.LogError(userValidationException);
                 
                 throw userValidationException;
+            }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+                
+                var userDependencyException =
+                    new UserDependencyException(failedUserStorageException);
+                
+                this.loggingBroker.LogCritical(userDependencyException);
+                
+                throw userDependencyException;
             }
         }
     }
