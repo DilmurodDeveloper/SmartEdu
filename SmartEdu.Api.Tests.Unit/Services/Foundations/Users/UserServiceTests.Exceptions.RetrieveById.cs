@@ -32,7 +32,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             UserDependencyException actualUserDependencyException =
                 await Assert.ThrowsAsync<UserDependencyException>(
                     retrieveUserByIdTask.AsTask);
-            
+
             // then
             actualUserDependencyException.Should().BeEquivalentTo(
                 expectedUserDependencyException);

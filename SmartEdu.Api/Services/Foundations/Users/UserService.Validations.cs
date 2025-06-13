@@ -30,7 +30,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
             }
         }
 
-        private void ValidateUserId(Guid userId) => 
+        private void ValidateUserId(Guid userId) =>
             Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
 
         private void ValidateStorageUser(User storageUser, Guid Id)
