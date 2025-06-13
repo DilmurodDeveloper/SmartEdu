@@ -7,5 +7,6 @@ namespace SmartEdu.Api.Brokers.Storages
         ValueTask<User> InsertUserAsync(User user);
         IQueryable<User> SelectAllUsers();
         ValueTask<User> SelectUserByIdAsync(Guid userId);
+        ValueTask<User> UpdateUserAsync(User user);
     }
 }
