@@ -29,6 +29,14 @@ namespace SmartEdu.Api.Brokers.Storages
             return broker.Set<T>();
         }
 
+        private async ValueTask<T> SelectAsync<T>(params object[] objectsId)
+            where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+
+            return await broker.FindAsync<T>(objectsId);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =
