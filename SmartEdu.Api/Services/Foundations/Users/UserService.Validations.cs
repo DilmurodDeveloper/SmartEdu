@@ -32,6 +32,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
                 (Rule: IsInvalid(user.Address), Parameter: nameof(User.Address)),
                 (Rule: IsInvalid(user.PasswordHash), Parameter: nameof(User.PasswordHash)),
+                (Rule: IsInvalid(user.Role), Parameter: nameof(User.Role)),
                 (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
                 (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
                 (Rule: IsInvalid(user.IsActive), Parameter: nameof(User.IsActive)));
