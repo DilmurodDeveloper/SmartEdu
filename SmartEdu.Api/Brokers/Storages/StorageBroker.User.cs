@@ -15,5 +15,8 @@ namespace SmartEdu.Api.Brokers.Storages
 
         public async ValueTask<User> SelectUserByIdAsync(Guid userId) =>
             await SelectAsync<User>(userId);
+
+        public async ValueTask<User> UpdateUserAsync(User user) =>
+            await UpdateAsync(user);
     }
 }
