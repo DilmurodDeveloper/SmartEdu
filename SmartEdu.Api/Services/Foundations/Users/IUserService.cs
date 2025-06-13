@@ -6,5 +6,6 @@ namespace SmartEdu.Api.Services.Foundations.Users
     {
         ValueTask<User> AddUserAsync(User user);
         IQueryable<User> RetrieveAllUsers();
+        ValueTask<User> RetrieveUserByIdAsync(Guid userId);
     }
 }
