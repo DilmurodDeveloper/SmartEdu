@@ -56,7 +56,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             };
 
             var invalidUserException = new InvalidUserException();
-            
+
             invalidUserException.AddData(
                 key: nameof(User.Id),
                 values: "Id is required");
@@ -99,24 +99,24 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             //when
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(invalidUser);
-            
+
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(
                     modifyUserTask.AsTask);
-            
+
             //then
             actualUserValidationException.Should().BeEquivalentTo(
                 expectedUserValidationException);
-            
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserValidationException))),
                         Times.Once);
-            
+
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(It.IsAny<User>()),
                     Times.Never);
-            
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
@@ -168,14 +168,14 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             Guid userId = nonExistentUser.Id;
 
             var notFoundUserException = new NotFoundUserException(userId);
-            
+
             var expectedUserValidationException =
                 new UserValidationException(notFoundUserException);
-            
+
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(nullUser);
-            
+
             //when
             ValueTask<User> modifyUserTask =
                 this.userService.ModifyUserAsync(nonExistentUser);
@@ -191,12 +191,12 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(userId),
                     Times.Once);
-           
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserValidationException))),
                         Times.Once);
-            
+
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }

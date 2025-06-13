@@ -130,7 +130,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
         {
             var userDependencyException = new UserDependencyException(exception);
             this.loggingBroker.LogError(userDependencyException);
-            
+
             return userDependencyException;
         }
     }

@@ -1,9 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using SmartEdu.Api.Brokers.Loggings;
+﻿using SmartEdu.Api.Brokers.Loggings;
 using SmartEdu.Api.Brokers.Storages;
 using SmartEdu.Api.Models.Foundations.Users;
-using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 
 namespace SmartEdu.Api.Services.Foundations.Users
 {

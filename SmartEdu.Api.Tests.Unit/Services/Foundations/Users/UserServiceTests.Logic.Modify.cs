@@ -17,30 +17,30 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             User updatedUser = inputUser;
             User expectedUser = updatedUser.DeepClone();
             Guid userId = inputUser.Id;
-            
+
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(storageUser);
-            
+
             this.storageBrokerMock.Setup(broker =>
                 broker.UpdateUserAsync(inputUser))
                 .ReturnsAsync(updatedUser);
-            
+
             //when
-            User actualUser = 
+            User actualUser =
                 await this.userService.ModifyUserAsync(inputUser);
-            
+
             //then
             actualUser.Should().BeEquivalentTo(expectedUser);
-            
+
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(userId),
                     Times.Once);
-            
+
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateUserAsync(inputUser),
                     Times.Once);
-            
+
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
