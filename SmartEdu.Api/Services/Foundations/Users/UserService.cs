@@ -29,6 +29,6 @@ namespace SmartEdu.Api.Services.Foundations.Users
             TryCatch(() => this.storageBroker.SelectAllUsers());
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            throw new NotImplementedException();
+            this.storageBroker.SelectUserByIdAsync(userId);
     }
 }
