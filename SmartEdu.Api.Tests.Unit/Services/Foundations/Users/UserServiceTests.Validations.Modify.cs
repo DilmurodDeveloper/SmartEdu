@@ -157,5 +157,48 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserDoesNotExistsAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateRandomUser();
+            User nonExistentUser = randomUser;
+            User nullUser = null;
+            Guid userId = nonExistentUser.Id;
+
+            var notFoundUserException = new NotFoundUserException(userId);
+            
+            var expectedUserValidationException =
+                new UserValidationException(notFoundUserException);
+            
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(userId))
+                    .ReturnsAsync(nullUser);
+            
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(nonExistentUser);
+
+            UserValidationException actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(
+                    modifyUserTask.AsTask);
+
+            //then
+            actualUserValidationException.Should().BeEquivalentTo(
+                expectedUserValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(userId),
+                    Times.Once);
+           
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))),
+                        Times.Once);
+            
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
