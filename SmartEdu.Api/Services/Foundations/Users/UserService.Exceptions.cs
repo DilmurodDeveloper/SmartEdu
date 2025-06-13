@@ -29,13 +29,13 @@ namespace SmartEdu.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(notFoundUserException);
             }
-            //catch (SqlException sqlException)
-            //{
-                //var failedUserStorageException =
-                    //new FailedUserStorageException(sqlException);
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
 
-                //throw CreateAndLogCriticalDependencyException(failedUserStorageException);
-            //}
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsUserException =
