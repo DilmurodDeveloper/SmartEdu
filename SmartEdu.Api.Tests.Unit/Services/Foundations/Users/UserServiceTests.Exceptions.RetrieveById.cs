@@ -11,7 +11,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowSqlExceptionOnRetrieveByIdIfSqlErrorOccursAndLogItAsync()
         {
-            // given
+            //given
             Guid someId = Guid.NewGuid();
             SqlException sqlException = GetSqlError();
 
@@ -25,7 +25,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
 
-            // when
+            //when
             ValueTask<User> retrieveUserByIdTask =
                 this.userService.RetrieveUserByIdAsync(someId);
 
@@ -33,7 +33,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 await Assert.ThrowsAsync<UserDependencyException>(
                     retrieveUserByIdTask.AsTask);
 
-            // then
+            //then
             actualUserDependencyException.Should().BeEquivalentTo(
                 expectedUserDependencyException);
 

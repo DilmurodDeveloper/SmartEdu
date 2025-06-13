@@ -40,5 +40,18 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
             return storageUser;
         });
+
+        public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            ValidateAccountOnModify(user);
+
+            User storageUser =
+                await this.storageBroker.SelectUserByIdAsync(user.Id);
+
+            ValidateStorageUser(storageUser, user.Id);
+
+            return await this.storageBroker.UpdateUserAsync(user);
+        });
     }
 }

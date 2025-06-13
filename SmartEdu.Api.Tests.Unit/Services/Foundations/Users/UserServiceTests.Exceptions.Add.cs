@@ -11,7 +11,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowCriticalDependencyExceptionOnAddIfSqlErrorOccursAndLogItAsync()
         {
-            // given
+            //given
             User someUser = CreateRandomUser();
             SqlException sqlException = GetSqlError();
             var failedUserStorageException = new FailedUserStorageException(sqlException);
@@ -23,11 +23,11 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.InsertUserAsync(someUser))
                     .ThrowsAsync(sqlException);
 
-            // when
+            //when
             ValueTask<User> addUserTask =
                 this.userService.AddUserAsync(someUser);
 
-            // then
+            //then
             await Assert.ThrowsAsync<UserDependencyException>(() =>
                 addUserTask.AsTask());
 
@@ -86,7 +86,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
-            // given
+            //given
             User someUser = CreateRandomUser();
             var serviceException = new Exception();
 
@@ -100,11 +100,11 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.InsertUserAsync(someUser))
                     .ThrowsAsync(serviceException);
 
-            // when
+            //when
             ValueTask<User> addUserTask =
                 this.userService.AddUserAsync(someUser);
 
-            // then
+            //then
             await Assert.ThrowsAsync<UserServiceException>(() =>
                 addUserTask.AsTask());
 

@@ -1,5 +1,6 @@
 ﻿using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using SmartEdu.Api.Models.Foundations.Users;
 using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 using Xeptions;
@@ -28,6 +29,20 @@ namespace SmartEdu.Api.Services.Foundations.Users
             catch (NotFoundUserException notFoundUserException)
             {
                 throw CreateAndLogValidationException(notFoundUserException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(dbUpdateConcurrencyException);
+
+                throw CreateAndLogDependencyValidationException(failedUserStorageException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedUserStorageException);
             }
             catch (SqlException sqlException)
             {
@@ -109,6 +124,14 @@ namespace SmartEdu.Api.Services.Foundations.Users
             this.loggingBroker.LogError(userServiceException);
 
             return userServiceException;
+        }
+
+        private UserDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var userDependencyException = new UserDependencyException(exception);
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
         }
     }
 }

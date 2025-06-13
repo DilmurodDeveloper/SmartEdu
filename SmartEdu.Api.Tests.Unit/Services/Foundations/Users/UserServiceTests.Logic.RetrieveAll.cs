@@ -9,7 +9,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public void ShouldRetrieveAllUsers()
         {
-            // given
+            //given
             IQueryable<User> randomUsers = CreateRandomUsers();
             IQueryable<User> storageUsers = randomUsers;
             IQueryable<User> expectedUsers = storageUsers;
@@ -18,11 +18,11 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectAllUsers())
                     .Returns(storageUsers);
 
-            // when
+            //when
             IQueryable<User> actualUsers =
                 this.userService.RetrieveAllUsers();
 
-            // then
+            //then
             actualUsers.Should().BeEquivalentTo(expectedUsers);
 
             this.storageBrokerMock.Verify(broker =>

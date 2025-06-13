@@ -9,7 +9,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldRetrieveUserByIdAsync()
         {
-            // given
+            //given
             Guid randomUserId = Guid.NewGuid();
             Guid inputUserId = randomUserId;
             User randomUser = CreateRandomUser();
@@ -20,12 +20,12 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(storageUser);
 
-            // when
+            //when
             User actualUser =
                 await this.userService
                     .RetrieveUserByIdAsync(inputUserId);
 
-            // then
+            //then
             actualUser.Should().BeEquivalentTo(expectedUser);
 
             this.storageBrokerMock.Verify(broker =>
