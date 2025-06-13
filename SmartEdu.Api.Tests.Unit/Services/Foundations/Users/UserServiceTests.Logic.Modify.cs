@@ -19,7 +19,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             Guid userId = inputUser.Id;
             
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectUserByIdAsync(inputUser.Id))
+                broker.SelectUserByIdAsync(userId))
                     .ReturnsAsync(storageUser);
             
             this.storageBrokerMock.Setup(broker =>
@@ -34,7 +34,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             actualUser.Should().BeEquivalentTo(expectedUser);
             
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(inputUser.Id),
+                broker.SelectUserByIdAsync(userId),
                     Times.Once);
             
             this.storageBrokerMock.Verify(broker =>

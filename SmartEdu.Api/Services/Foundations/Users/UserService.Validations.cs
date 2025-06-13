@@ -22,6 +22,21 @@ namespace SmartEdu.Api.Services.Foundations.Users
                 (Rule: IsInvalid(user.IsActive), Parameter: nameof(User.IsActive)));
         }
 
+        private void ValidateAccountOnModify(User user)
+        {
+            ValidateUserNotNull(user);
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.Address), Parameter: nameof(User.Address)),
+                (Rule: IsInvalid(user.PasswordHash), Parameter: nameof(User.PasswordHash)),
+                (Rule: IsInvalid(user.CreatedDate), Parameter: nameof(User.CreatedDate)),
+                (Rule: IsInvalid(user.UpdatedDate), Parameter: nameof(User.UpdatedDate)),
+                (Rule: IsInvalid(user.IsActive), Parameter: nameof(User.IsActive)));
+        }
+
         private void ValidateUserNotNull(User user)
         {
             if (user is null)

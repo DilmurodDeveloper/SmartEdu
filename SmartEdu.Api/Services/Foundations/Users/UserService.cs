@@ -46,10 +46,10 @@ namespace SmartEdu.Api.Services.Foundations.Users
         {
             try
             {
-                if (user is null)
-                {
-                    throw new NullUserException();
-                }
+                ValidateAccountOnModify(user);
+
+                User storageUser = 
+                    await this.storageBroker.SelectUserByIdAsync(user.Id);
 
                 return await this.storageBroker.UpdateUserAsync(user);
             }
@@ -57,6 +57,15 @@ namespace SmartEdu.Api.Services.Foundations.Users
             {
                 var userValidationException =
                     new UserValidationException(nullUserException);
+                
+                this.loggingBroker.LogError(userValidationException);
+                
+                throw userValidationException;
+            }
+            catch (InvalidUserException invalidUserException)
+            {
+                var userValidationException =
+                    new UserValidationException(invalidUserException);
                 
                 this.loggingBroker.LogError(userValidationException);
                 

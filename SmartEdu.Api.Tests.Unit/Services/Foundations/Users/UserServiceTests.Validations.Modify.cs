@@ -82,16 +82,16 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 values: "Text is required");
 
             invalidUserException.AddData(
-                key: nameof(User.Role),
-                values: "Role is required");
-
-            invalidUserException.AddData(
                 key: nameof(User.CreatedDate),
                 values: "Date is required");
 
             invalidUserException.AddData(
                 key: nameof(User.UpdatedDate),
                 values: "Date is required");
+
+            invalidUserException.AddData(
+                key: nameof(User.IsActive),
+                values: "IsActive must be true");
 
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
