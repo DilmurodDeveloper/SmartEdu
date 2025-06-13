@@ -41,7 +41,12 @@ namespace SmartEdu.Api.Services.Foundations.Users
             return storageUser;
         });
 
-        public ValueTask<User> ModifyUserAsync(User user) =>
-            throw new NotImplementedException();
+        public async ValueTask<User> ModifyUserAsync(User user)
+        {
+            User storageUser =
+                await this.storageBroker.SelectUserByIdAsync(user.Id);
+
+            return await this.storageBroker.UpdateUserAsync(user);
+        }
     }
 }
