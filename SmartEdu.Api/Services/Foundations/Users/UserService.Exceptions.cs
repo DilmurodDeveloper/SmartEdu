@@ -25,6 +25,10 @@ namespace SmartEdu.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(invalidUserException);
             }
+            catch (NotFoundUserException notFoundUserException)
+            {
+                throw CreateAndLogValidationException(notFoundUserException);
+            }
             catch (SqlException sqlException)
             {
                 var failedUserStorageException =

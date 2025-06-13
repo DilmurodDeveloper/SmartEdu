@@ -27,5 +27,18 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
         public IQueryable<User> RetrieveAllUsers() =>
             TryCatch(() => this.storageBroker.SelectAllUsers());
+
+        public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+
+            User storageUser =
+                await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(storageUser, userId);
+
+            return storageUser;
+        });
     }
 }
