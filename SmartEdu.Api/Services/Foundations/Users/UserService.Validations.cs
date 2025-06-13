@@ -30,6 +30,17 @@ namespace SmartEdu.Api.Services.Foundations.Users
             }
         }
 
+        private void ValidateUserId(Guid userId) => 
+            Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
+
+        private void ValidateStorageUser(User storageUser, Guid Id)
+        {
+            if (storageUser is null)
+            {
+                throw new NotFoundUserException(Id);
+            }
+        }
+
         private static dynamic IsInvalid(Guid Id) => new
         {
             Condition = Id == Guid.Empty,
