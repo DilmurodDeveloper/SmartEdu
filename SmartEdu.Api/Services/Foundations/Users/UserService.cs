@@ -44,94 +44,17 @@ namespace SmartEdu.Api.Services.Foundations.Users
             return storageUser;
         });
 
-        public async ValueTask<User> ModifyUserAsync(User user)
+        public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
         {
-            try
-            {
-                ValidateAccountOnModify(user);
+            ValidateAccountOnModify(user);
 
-                User storageUser =
-                    await this.storageBroker.SelectUserByIdAsync(user.Id);
+            User storageUser =
+                await this.storageBroker.SelectUserByIdAsync(user.Id);
 
-                ValidateStorageUser(storageUser, user.Id);
+            ValidateStorageUser(storageUser, user.Id);
 
-                return await this.storageBroker.UpdateUserAsync(user);
-            }
-            catch (NullUserException nullUserException)
-            {
-                var userValidationException =
-                    new UserValidationException(nullUserException);
-
-                this.loggingBroker.LogError(userValidationException);
-
-                throw userValidationException;
-            }
-            catch (InvalidUserException invalidUserException)
-            {
-                var userValidationException =
-                    new UserValidationException(invalidUserException);
-
-                this.loggingBroker.LogError(userValidationException);
-
-                throw userValidationException;
-            }
-            catch (NotFoundUserException notFoundUserException)
-            {
-                var userValidationException =
-                    new UserValidationException(notFoundUserException);
-
-                this.loggingBroker.LogError(userValidationException);
-
-                throw userValidationException;
-            }
-            catch (SqlException sqlException)
-            {
-                var failedUserStorageException =
-                    new FailedUserStorageException(sqlException);
-
-                var userDependencyException =
-                    new UserDependencyException(failedUserStorageException);
-
-                this.loggingBroker.LogCritical(userDependencyException);
-
-                throw userDependencyException;
-            }
-            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
-            {
-                var failedUserStorageException =
-                    new FailedUserStorageException(dbUpdateConcurrencyException);
-
-                var userDependencyValidationException =
-                    new UserDependencyValidationException(failedUserStorageException);
-
-                this.loggingBroker.LogError(userDependencyValidationException);
-
-                throw userDependencyValidationException;
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                var failedUserStorageException =
-                    new FailedUserStorageException(dbUpdateException);
-
-                var userDependencyException =
-                    new UserDependencyException(failedUserStorageException);
-
-                this.loggingBroker.LogError(userDependencyException);
-
-                throw userDependencyException;
-            }
-            catch (Exception exception)
-            {
-                var failedUserServiceException =
-                    new FailedUserServiceException(exception);
-
-                var userServiceException =
-                    new UserServiceException(failedUserServiceException);
-
-                this.loggingBroker.LogError(userServiceException);
-                
-                throw userServiceException;
-            }
-        }
+            return await this.storageBroker.UpdateUserAsync(user);
+        });
     }
 }
