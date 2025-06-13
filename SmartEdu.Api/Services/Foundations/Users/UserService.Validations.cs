@@ -25,6 +25,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
         private void ValidateAccountOnModify(User user)
         {
             ValidateUserNotNull(user);
+
             Validate(
                 (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
                 (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
