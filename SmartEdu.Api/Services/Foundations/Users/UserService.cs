@@ -108,6 +108,18 @@ namespace SmartEdu.Api.Services.Foundations.Users
                 
                 throw userDependencyValidationException;
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(dbUpdateException);
+                
+                var userDependencyException =
+                    new UserDependencyException(failedUserStorageException);
+                
+                this.loggingBroker.LogError(userDependencyException);
+                
+                throw userDependencyException;
+            }
         }
     }
 }
