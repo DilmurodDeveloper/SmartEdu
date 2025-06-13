@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using SmartEdu.Api.Models.Foundations.Users;
 using SmartEdu.Api.Models.Foundations.Users.Exceptions;
@@ -45,6 +46,49 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedUserDependencyException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyifDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            //given
+            User randomUser = CreateRandomUser();
+            User someUser = randomUser;
+            Guid userId = someUser.Id;
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var failedUserStorageException =
+                new FailedUserStorageException(dbUpdateConcurrencyException);
+
+            var expectedUserDependencyValidationException =
+                new UserDependencyValidationException(failedUserStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(userId))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
+
+            //when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(someUser);
+
+            UserDependencyValidationException actualUserDependencyValidationException =
+                await Assert.ThrowsAsync<UserDependencyValidationException>(modifyUserTask.AsTask);
+
+            //then
+            actualUserDependencyValidationException.Should().BeEquivalentTo(
+                expectedUserDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(userId),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyValidationException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
