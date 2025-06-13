@@ -50,7 +50,7 @@ namespace SmartEdu.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("All")]
         public ActionResult<IQueryable<User>> GetAllUsers()
         {
             try
@@ -69,6 +69,34 @@ namespace SmartEdu.Api.Controllers
             {
                 return InternalServerError(
                     userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("ById")]
+        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid userId)
+        {
+            try
+            {
+                User getUser = await this.userService.RetrieveUserByIdAsync(userId);
+
+                return Created(getUser);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
             }
         }
     }
