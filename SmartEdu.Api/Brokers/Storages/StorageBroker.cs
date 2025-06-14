@@ -14,6 +14,7 @@ namespace SmartEdu.Api.Brokers.Storages
         }
 
         private async ValueTask<T> InsertAsync<T>(T @object)
+            where T : class
         {
             var broker = new StorageBroker(this.configuration);
             broker.Entry(@object).State = EntityState.Added;
@@ -38,9 +39,20 @@ namespace SmartEdu.Api.Brokers.Storages
         }
 
         private async ValueTask<T> UpdateAsync<T>(T @object)
+            where T : class
         {
             var broker = new StorageBroker(this.configuration);
             broker.Entry(@object).State = EntityState.Modified;
+            await broker.SaveChangesAsync();
+
+            return @object;
+        }
+
+        private async ValueTask<T> DeleteAsync<T>(T @object)
+            where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+            broker.Entry(@object).State = EntityState.Deleted;
             await broker.SaveChangesAsync();
 
             return @object;
