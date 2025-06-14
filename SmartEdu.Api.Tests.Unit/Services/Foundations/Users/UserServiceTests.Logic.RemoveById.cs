@@ -30,7 +30,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             // when
             User actualUser =
                 await this.userService
-                    .RemoveUserAsync(inputUserId);
+                    .RemoveUserByIdAsync(inputUserId);
             
             // then
             actualUser.Should().BeEquivalentTo(expectedUser);
