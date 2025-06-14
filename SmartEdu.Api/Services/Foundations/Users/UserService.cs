@@ -53,5 +53,8 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
             return await this.storageBroker.UpdateUserAsync(user);
         });
+
+        public ValueTask<User> RemoveUserAsync(Guid userId) =>
+            throw new NotImplementedException();
     }
 }
