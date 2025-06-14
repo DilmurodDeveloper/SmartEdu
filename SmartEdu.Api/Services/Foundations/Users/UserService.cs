@@ -1,6 +1,7 @@
 ﻿using SmartEdu.Api.Brokers.Loggings;
 using SmartEdu.Api.Brokers.Storages;
 using SmartEdu.Api.Models.Foundations.Users;
+using SmartEdu.Api.Models.Foundations.Users.Exceptions;
 
 namespace SmartEdu.Api.Services.Foundations.Users
 {
@@ -56,8 +57,22 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
         public async ValueTask<User> RemoveUserByIdAsync(Guid userId)
         {
-            User user = await this.storageBroker.SelectUserByIdAsync(userId);
-            return await this.storageBroker.DeleteUserAsync(user);
+            try
+            {
+                ValidateUserId(userId);
+                User user = await this.storageBroker.SelectUserByIdAsync(userId);
+                
+                return await this.storageBroker.DeleteUserAsync(user);
+            }
+            catch (InvalidUserException invalidUserException)
+            {
+                var userValidationException =
+                    new UserValidationException(invalidUserException);
+
+                this.loggingBroker.LogError(userValidationException);
+                
+                throw userValidationException;
+            }
         }
     }
 }
