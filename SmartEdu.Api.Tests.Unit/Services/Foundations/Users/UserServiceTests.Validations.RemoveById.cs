@@ -10,7 +10,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRemoveByIdIfUserIdIsInvalidAndLogItAsync()
         {
-            // given
+            //given
             Guid invalidUserId = Guid.Empty;
             var invalidUserException = new InvalidUserException();
 
@@ -21,7 +21,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             var expectedUserValidationException =
                 new UserValidationException(invalidUserException);
 
-            // when
+            //when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(invalidUserId);
 
@@ -29,7 +29,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                     await Assert.ThrowsAsync<UserValidationException>(
                         removeUserByIdTask.AsTask);
 
-            // then
+            //then
             actualUserValidationException.Should().BeEquivalentTo(
                 expectedUserValidationException);
 
@@ -49,7 +49,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldThrowValidationExceptionOnRemoveByIdIfUserDoesNotExistAndLogItAsync()
         {
-            // given
+            //given
             Guid randomUserId = Guid.NewGuid();
             Guid inputUserId = randomUserId;
             User noUser = null;
@@ -62,7 +62,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(noUser);
             
-            // when
+            //when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(inputUserId);
 
@@ -70,7 +70,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 await Assert.ThrowsAsync<UserValidationException>(
                     removeUserByIdTask.AsTask);
             
-            // then
+            //then
             actualUserValidationException.Should().BeEquivalentTo(
                 expectedUserValidationException);
 

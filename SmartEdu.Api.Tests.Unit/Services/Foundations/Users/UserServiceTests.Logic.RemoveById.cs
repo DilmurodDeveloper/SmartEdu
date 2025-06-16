@@ -10,7 +10,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
         [Fact]
         public async Task ShouldRemoveUserAsync()
         {
-            // given
+            //given
             Guid randomUserId = Guid.NewGuid();
             Guid inputUserId = randomUserId;
             User randomUser = CreateRandomUser();
@@ -27,12 +27,12 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
                 broker.DeleteUserAsync(expectedInputUser))
                     .ReturnsAsync(deleteUser);
             
-            // when
+            //when
             User actualUser =
                 await this.userService
                     .RemoveUserByIdAsync(inputUserId);
             
-            // then
+            //then
             actualUser.Should().BeEquivalentTo(expectedUser);
             
             this.storageBrokerMock.Verify(broker =>
