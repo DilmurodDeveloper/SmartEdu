@@ -62,7 +62,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             //given
             Guid someUserId = Guid.NewGuid();
             Guid inputUserId = someUserId;
-            var sqlException = GetSqlError();
+            SqlException sqlException = GetSqlError();
 
             var failedUserStorageException =
                 new FailedUserStorageException(sqlException);
