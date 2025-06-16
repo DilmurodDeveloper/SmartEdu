@@ -8,5 +8,6 @@ namespace SmartEdu.Api.Services.Foundations.Users
         IQueryable<User> RetrieveAllUsers();
         ValueTask<User> RetrieveUserByIdAsync(Guid userId);
         ValueTask<User> ModifyUserAsync(User user);
+        ValueTask<User> RemoveUserByIdAsync(Guid userId);
     }
 }
