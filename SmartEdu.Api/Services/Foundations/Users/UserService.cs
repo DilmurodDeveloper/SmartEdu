@@ -61,13 +61,24 @@ namespace SmartEdu.Api.Services.Foundations.Users
             {
                 ValidateUserId(userId);
                 User user = await this.storageBroker.SelectUserByIdAsync(userId);
-                
+
+                ValidateStorageUser(user, userId);
+
                 return await this.storageBroker.DeleteUserAsync(user);
             }
             catch (InvalidUserException invalidUserException)
             {
                 var userValidationException =
                     new UserValidationException(invalidUserException);
+
+                this.loggingBroker.LogError(userValidationException);
+                
+                throw userValidationException;
+            }
+            catch (NotFoundUserException notFoundUserException)
+            {
+                var userValidationException =
+                    new UserValidationException(notFoundUserException);
 
                 this.loggingBroker.LogError(userValidationException);
                 
