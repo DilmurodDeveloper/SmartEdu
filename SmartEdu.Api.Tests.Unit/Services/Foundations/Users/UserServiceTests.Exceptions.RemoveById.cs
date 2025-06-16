@@ -98,5 +98,48 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            Guid someUserId = Guid.NewGuid();
+            Guid inputUserId = someUserId;
+            var serviceException = new Exception();
+
+            var failedUserServiceException =
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException =
+                new UserServiceException(failedUserServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<User> removeUserByIdTask =
+                this.userService.RemoveUserByIdAsync(inputUserId);
+
+            UserServiceException actualUserServiceException =
+                await Assert.ThrowsAsync<UserServiceException>(
+                    removeUserByIdTask.AsTask);
+
+            //then
+            actualUserServiceException.Should().BeEquivalentTo(
+                expectedUserServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
