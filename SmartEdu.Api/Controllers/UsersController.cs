@@ -133,5 +133,44 @@ namespace SmartEdu.Api.Controllers
                 return InternalServerError(userServiceException.InnerException);
             }
         }
+
+        [HttpDelete]
+        public async ValueTask<ActionResult<User>> DeleteUserAsync(Guid userId)
+        {
+            try
+            {
+                User deletedUser =
+                    await this.userService.RemoveUserByIdAsync(userId);
+
+                return Created(deletedUser);
+            }
+            catch (UserDependencyValidationException userDependencyValidationException)
+                when (userDependencyValidationException.InnerException
+                    is FailedUserStorageException)
+            {
+                return BadRequest(userDependencyValidationException.InnerException);
+            }
+            catch (UserDependencyValidationException userDependencyValidationException)
+            {
+                return Conflict(userDependencyValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+                when (userValidationException.InnerException is NotFoundUserException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserValidationException userValidationException)
+            {
+                return BadRequest(userValidationException.InnerException);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
     }
 }
