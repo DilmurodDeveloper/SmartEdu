@@ -61,7 +61,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(inputUserId))
                     .ReturnsAsync(noUser);
-            
+
             //when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(inputUserId);
@@ -69,7 +69,7 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(
                     removeUserByIdTask.AsTask);
-            
+
             //then
             actualUserValidationException.Should().BeEquivalentTo(
                 expectedUserValidationException);

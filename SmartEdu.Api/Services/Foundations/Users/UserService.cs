@@ -74,7 +74,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
                     new UserValidationException(invalidUserException);
 
                 this.loggingBroker.LogError(userValidationException);
-                
+
                 throw userValidationException;
             }
             catch (NotFoundUserException notFoundUserException)
@@ -83,7 +83,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
                     new UserValidationException(notFoundUserException);
 
                 this.loggingBroker.LogError(userValidationException);
-                
+
                 throw userValidationException;
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
@@ -93,21 +93,21 @@ namespace SmartEdu.Api.Services.Foundations.Users
 
                 var userDependencyValidationException =
                     new UserDependencyValidationException(failedUserStorageException);
-                
+
                 this.loggingBroker.LogError(userDependencyValidationException);
-                
+
                 throw userDependencyValidationException;
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
                 var failedUserStorageException =
                     new FailedUserStorageException(sqlException);
-                
+
                 var userDependencyException =
                     new UserDependencyException(failedUserStorageException);
-                
+
                 this.loggingBroker.LogCritical(userDependencyException);
-                
+
                 throw userDependencyException;
             }
             catch (Exception exception)
@@ -119,7 +119,7 @@ namespace SmartEdu.Api.Services.Foundations.Users
                     new UserServiceException(failedUserServiceException);
 
                 this.loggingBroker.LogError(userServiceException);
-                
+
                 throw userServiceException;
             }
         }

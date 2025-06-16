@@ -66,35 +66,35 @@ namespace SmartEdu.Api.Tests.Unit.Services.Foundations.Users
 
             var failedUserStorageException =
                 new FailedUserStorageException(sqlException);
-            
+
             var expectedUserDependencyException =
                 new UserDependencyException(failedUserStorageException);
-            
+
             this.storageBrokerMock.Setup(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()))
                     .ThrowsAsync(sqlException);
-            
+
             //when
             ValueTask<User> removeUserByIdTask =
                 this.userService.RemoveUserByIdAsync(inputUserId);
-            
+
             UserDependencyException actualUserDependencyException =
                 await Assert.ThrowsAsync<UserDependencyException>(
                     removeUserByIdTask.AsTask);
-            
+
             //then
             actualUserDependencyException.Should().BeEquivalentTo(
                 expectedUserDependencyException);
-            
+
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectUserByIdAsync(It.IsAny<Guid>()),
                     Times.Once);
-            
+
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedUserDependencyException))),
                         Times.Once);
-            
+
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
